@@ -17,5 +17,3 @@
 **RF03. Add to cart**: adicionar os números no carrinho
 
 **RF04. Delete**: apagar um item do carrinho
-
-.- Ascores vem da api,
