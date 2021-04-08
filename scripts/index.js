@@ -1,7 +1,8 @@
 let game = [];
 let gameSelected = [];
 let gameRange = [];
-let cart = []; //ok
+let selectedNumbers = [];
+let cart = [];
 
 //Html variables
 
@@ -69,13 +70,33 @@ const htmlRender = {
     //In react we have a keyProps. Here....
 
     for (let index = 1; index <= gameRange; index++) {
+      const format = formatedNumber.inputValue(index);
       $betTypeRange.innerHTML += `
-      
-      <input type="text" name="" id="${index}" value="${index}" readonly />
+      <input type="text" name="" id="${index}" value="${format}" readonly />
     `;
     }
+  },
+};
 
-    console.log(gameRange);
+//Utils
+const formatedNumber = {
+  inputValue(number) {
+    return number < 10 ? `0${number}` : number;
+  },
+
+  //Format Value in Cart.
+  //if need * 100 for save and next /100 for back it is great!
+  currencyValue(value) {
+    value = String(value).replace(/\D/g, "");
+
+    value = Number(value);
+
+    value = value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    return value;
   },
 };
 
@@ -83,10 +104,6 @@ const htmlRender = {
 const handleEvents = {
   switchGameMode(gameType, gameColor) {
     console.log(gameType, gameColor);
-
-    const $lotoButton = document.querySelector('[data-js="Lotofácil"]');
-    const $MegaButton = document.querySelector('[data-js="Mega-Sena"]');
-    const $QuinaButton = document.querySelector('[data-js="Quina"]');
 
     switch (gameType) {
       case "Lotofácil":
@@ -115,6 +132,16 @@ const handleEvents = {
     const test = game[0].filter((game) => game.type === gameType);
     gameSelected = [...test];
     console.log(gameSelected);
+  },
+
+  //Take value inputs, put in array.
+  //When click, Clear Array.
+  //Or save in cart.
+  //HtmlRender for create it in cart.
+  //When create make id for delete him.
+
+  setChooseNumbers() {
+    //Put in Array?
   },
 };
 

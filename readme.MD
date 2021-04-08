@@ -2,11 +2,11 @@
 
 # **Requisitos Não Funcionais**
 
-**RNF01**. Construir toda a página utilizando  Html, CSS e Javascript Puro.
+[x] **RNF01**. Construir toda a página utilizando  Html, CSS e Javascript Puro.
 
-**RNF02.** Consumir o arquivo JSON para obter os jogos e suas regras (Em Anexo)
+[x] **RNF02.** Consumir o arquivo JSON para obter os jogos e suas regras (Em Anexo)
 
-**RNF03.** Se preferir, pode utilizar bootstrap
+[ ]**RNF03.** Se preferir, pode utilizar bootstrap
 
 # **Requisitos Funcionais**
 

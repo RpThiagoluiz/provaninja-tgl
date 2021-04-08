@@ -53,6 +53,38 @@ button {
   border-radius: 7px 0 0 7px;
 }
 
+/*=====KeyFrames =====*/
+@-webkit-keyframes animatedTransation {
+  0% {
+    -webkit-transform: translate(0, 1em);
+    z-index: -1;
+  }
+  50% {
+    -webkit-transform: translate(0, -0.5em);
+    z-index: -1;
+  }
+  100% {
+    -webkit-transform: translate(0, 0);
+    z-index: 1;
+  }
+}
+
+@keyframes animatedTransation {
+  0% {
+    top: 0;
+    transform: translate(0, 0);
+    z-index: -1;
+  }
+  50% {
+    transform: translate(0, -2.5rem);
+    z-index: -1;
+  }
+  100% {
+    transform: translate(0, 1rem);
+    z-index: 1;
+  }
+}
+
 /*=====HEADER=====*/
 .header-nav {
   height: 3.2rem;
@@ -211,6 +243,9 @@ main div header p span {
   border-radius: 50%;
 
   cursor: pointer;
+
+  -webkit-animation: ease-in-out animatedTransation 0.6s;
+  animation: ease-in-out animatedTransation 0.6s;
 }
 
 .grid-bet-container-range input.selected {
