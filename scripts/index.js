@@ -1,4 +1,5 @@
 let game = [];
+let gameSelected = [];
 let gameRange = [];
 let cart = [];
 
@@ -17,7 +18,7 @@ const api = {
         if (ajax.readyState === 4 && ajax.status === 200) {
           //JSON parse, copy all sub propries in OBJ.
           game.push(JSON.parse(ajax.responseText).types);
-          htmlRender.gameTypes();
+          htmlRender.gameButtonTypes();
         }
       } catch (error) {
         console.log(error);
@@ -32,39 +33,74 @@ const api = {
 //Set Active
 // Call Description
 // Call Numbers
-const handleEvents = {
-  switchGameMode(gameType) {
-    switch (gameType) {
-      case "Lotofácil":
-        console.log("loto");
-        break;
-      case "Mega-Sena":
-        console.log("mega");
-        break;
-      case "Quina":
-        console.log("quina");
-        break;
 
-      default:
-        break;
-    }
-  },
-};
-
-//Render gametypes button
+//Render gameButtonTypes button
 const htmlRender = {
-  gameTypes() {
+  gameButtonTypes() {
     const $betTypes = document.querySelector(".grid-bet-container-button");
     game[0].map((game) => {
       $betTypes.innerHTML += `
       <button
-        onclick="handleEvents.switchGameMode('${game.type}')"
+        onclick="handleEvents.switchGameMode('${game.type}','${game.color}')"
+        data-js="${game.type}"
         type="button"
         style="color:${game.color};border:2px solid ${game.color}" >
         ${game.type}
       </button>
       `;
     });
+  },
+
+  gameDescriptionType() {
+    const $betTypeDescription = document.querySelector(
+      ".grid-bet-container-description"
+    );
+
+    $betTypeDescription.innerHTML = `
+    <h2>Fill your bet</h2>
+    <p>${gameSelected[0].description}</p>
+    `;
+
+    console.log();
+  },
+};
+
+/* w8 */
+const handleEvents = {
+  switchGameMode(gameType, gameColor) {
+    console.log(gameType, gameColor);
+
+    const $lotoButton = document.querySelector('[data-js="Lotofácil"]');
+    const $MegaButton = document.querySelector('[data-js="Mega-Sena"]');
+    const $QuinaButton = document.querySelector('[data-js="Quina"]');
+
+    switch (gameType) {
+      case "Lotofácil":
+        handleEvents.setGame(gameType);
+        htmlRender.gameDescriptionType();
+
+        break;
+      case "Mega-Sena":
+        handleEvents.setGame(gameType);
+        htmlRender.gameDescriptionType();
+
+        break;
+      case "Quina":
+        handleEvents.setGame(gameType);
+        htmlRender.gameDescriptionType();
+
+        break;
+
+      default:
+        alert("GameInvalido!");
+        break;
+    }
+  },
+
+  setGame(gameType) {
+    const test = game[0].filter((game) => game.type === gameType);
+    gameSelected = [...test];
+    console.log(gameSelected);
   },
 };
 
