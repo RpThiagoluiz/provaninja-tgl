@@ -1,11 +1,9 @@
 let game = [];
 let gameSelected = [];
 let gameRange = [];
-let cart = [];
+let cart = []; //ok
 
 //Html variables
-
-const $betTypeRange = document.querySelector(".grid-bet-container-range"); //ok
 
 const api = {
   getApiGames() {
@@ -60,8 +58,24 @@ const htmlRender = {
     <h2>Fill your bet</h2>
     <p>${gameSelected[0].description}</p>
     `;
+  },
 
-    console.log();
+  gameRangeInputType() {
+    const $betTypeRange = document.querySelector(".grid-bet-container-range");
+
+    gameRange = gameSelected[0].range;
+    $betTypeRange.innerHTML = ""; //clean inputs-container
+    //Found 80 elements with non-unique id #
+    //In react we have a keyProps. Here....
+
+    for (let index = 1; index <= gameRange; index++) {
+      $betTypeRange.innerHTML += `
+      
+      <input type="text" name="" id="${index}" value="${index}" readonly />
+    `;
+    }
+
+    console.log(gameRange);
   },
 };
 
@@ -78,17 +92,17 @@ const handleEvents = {
       case "Lotofácil":
         handleEvents.setGame(gameType);
         htmlRender.gameDescriptionType();
-
+        htmlRender.gameRangeInputType();
         break;
       case "Mega-Sena":
         handleEvents.setGame(gameType);
         htmlRender.gameDescriptionType();
-
+        htmlRender.gameRangeInputType();
         break;
       case "Quina":
         handleEvents.setGame(gameType);
         htmlRender.gameDescriptionType();
-
+        htmlRender.gameRangeInputType();
         break;
 
       default:
