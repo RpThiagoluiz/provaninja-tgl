@@ -29,9 +29,25 @@ const api = {
 };
 
 //Onlick do button.
+//Set Active
+// Call Description
+// Call Numbers
 const handleEvents = {
-  switchGameMode() {
-    console.log(`hi`); //ReferenceError
+  switchGameMode(gameType) {
+    switch (gameType) {
+      case "Lotofácil":
+        console.log("loto");
+        break;
+      case "Mega-Sena":
+        console.log("mega");
+        break;
+      case "Quina":
+        console.log("quina");
+        break;
+
+      default:
+        break;
+    }
   },
 };
 
@@ -42,7 +58,8 @@ const htmlRender = {
     game[0].map((game) => {
       $betTypes.innerHTML += `
       <button
-        onclick="handleEvents.switchGameMode()"
+        onclick="handleEvents.switchGameMode('${game.type}')"
+        type="button"
         style="color:${game.color};border:2px solid ${game.color}" >
         ${game.type}
       </button>
