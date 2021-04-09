@@ -36,9 +36,10 @@ const utilsFormat = {
   //Format Value in Cart.
   //if need * 100 for save and next /100 for back it is great!
   currencyValue(value) {
+    value = value * 100;
     value = String(value).replace(/\D/g, "");
 
-    value = Number(value) / 10;
+    value = Number(value) / 100;
 
     value = value.toLocaleString("pt-BR", {
       style: "currency",
