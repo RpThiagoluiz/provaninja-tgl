@@ -68,10 +68,16 @@
 
           <section class="grid-bet-container-function-buttons">
             <div>
-              <button class="grid-bet-container-function-buttons-completed">
+              <button
+                class="grid-bet-container-function-buttons-completed"
+                onclick="handleButtonEvents.completeGame()"
+              >
                 Complete game
               </button>
-              <button class="grid-bet-container-function-buttons-clear">
+              <button
+                class="grid-bet-container-function-buttons-clear"
+                onclick="handleButtonEvents.resetGame()"
+              >
                 Clear game
               </button>
             </div>

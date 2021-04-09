@@ -55,24 +55,26 @@ const htmlRender = {
       ".grid-bet-container-description"
     );
 
+    const { description } = gameSelected[0];
+
     $betTypeDescription.innerHTML = `
     <h2>Fill your bet</h2>
-    <p>${gameSelected[0].description}</p>
+    <p>${description}</p>
     `;
   },
 
   gameRangeInputType() {
     const $betTypeRange = document.querySelector(".grid-bet-container-range");
 
-    gameRange = gameSelected[0].range;
+    const { range } = gameSelected[0];
     $betTypeRange.innerHTML = ""; //clean inputs-container
     //Found 80 elements with non-unique id #
     //In react we have a keyProps. Here....
 
-    for (let index = 1; index <= gameRange; index++) {
+    for (let index = 1; index <= range; index++) {
       const format = formatedNumber.inputValue(index);
       $betTypeRange.innerHTML += `
-      <input type="text" name="" id="${index}" value="${format}" readonly />
+      <input type="text" name="" id="${index}" value="${format}" class="grid-bet-container-range-input" onclick="getValue()" readonly />
     `;
     }
   },
@@ -129,6 +131,7 @@ const handleEvents = {
   },
 
   setGame(gameType) {
+    selectedNumbers = [];
     const test = game[0].filter((game) => game.type === gameType);
     gameSelected = [...test];
     console.log(gameSelected);
@@ -140,8 +143,55 @@ const handleEvents = {
   //HtmlRender for create it in cart.
   //When create make id for delete him.
 
-  setChooseNumbers() {
-    //Put in Array?
+  getValue() {
+    // const takeInput = document.querySelector(".grid-bet-container-range-input");
+
+    // takeInput.classList.toggle("selected");
+
+    return {};
+  },
+
+  randomSelectedNumbers(gameRange) {
+    return String(
+      formatedNumber.inputValue(Math.ceil(Math.random() * gameRange))
+    );
+  },
+};
+
+const handleButtonEvents = {
+  completeGame() {
+    try {
+      const { range } = gameSelected[0];
+      const maxNumber = gameSelected[0]["max-number"];
+
+      //range > selectedNumbers.length = randomSelected. push in array?
+
+      while (maxNumber > selectedNumbers.length) {
+        selectedNumbers.push(handleEvents.randomSelectedNumbers(range));
+      }
+      //OMG its work. *_*
+
+      const crescs = (cr1, cr2) => {
+        return cr1 - cr2;
+      };
+      //CompletedGame Repeat a number!
+
+      const crescResult = [...selectedNumbers];
+
+      console.log(crescResult.sort(crescs));
+    } catch (error) {
+      alert("Selecione um game primeiramente!");
+    }
+  },
+
+  resetGame() {
+    selectedNumbers = [];
+    const gameNumbersRange = document.querySelectorAll(
+      ".grid-bet-container-range-input"
+    );
+    gameNumbersRange.forEach((number) => {
+      number.style.background = "var(--cyan-gray-300)"; //
+    });
   },
 };
 
