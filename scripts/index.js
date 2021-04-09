@@ -164,12 +164,14 @@ const handleButtonEvents = {
       const { range } = gameSelected[0];
       const maxNumber = gameSelected[0]["max-number"];
 
-      //range > selectedNumbers.length = randomSelected. push in array?
-
+      //while is true, when he false result -1.
+      //Check if number exists in Array. ╰（‵□′）╯
       while (maxNumber > selectedNumbers.length) {
-        selectedNumbers.push(handleEvents.randomSelectedNumbers(range));
+        let randomNum = handleEvents.randomSelectedNumbers(range);
+        if (selectedNumbers.indexOf(randomNum) === -1) {
+          selectedNumbers.push(randomNum);
+        }
       }
-      //OMG its work. *_*
 
       const crescs = (cr1, cr2) => {
         return cr1 - cr2;
