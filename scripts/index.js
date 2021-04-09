@@ -2,9 +2,8 @@ let game = [];
 let gameSelected = [];
 let gameRange = [];
 let selectedNumbers = [];
-let cart = [];
 
-//Html variables
+let cart = []; //Add all cartItens Here!
 
 const api = {
   getApiGames() {
@@ -25,6 +24,38 @@ const api = {
     };
 
     ajax.addEventListener("readystatechange", successCall, false);
+  },
+};
+
+//Utils
+const utilsFormat = {
+  inputValue(number) {
+    return number < 10 ? `0${number}` : number;
+  },
+
+  //Format Value in Cart.
+  //if need * 100 for save and next /100 for back it is great!
+  currencyValue(value) {
+    value = String(value).replace(/\D/g, "");
+
+    value = Number(value) / 10;
+
+    value = value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    return value;
+  },
+
+  crescentArrayNumbers(selectedNumber) {
+    const crescs = (cr1, cr2) => {
+      return cr1 - cr2;
+    };
+
+    const crescResult = [...selectedNumber];
+
+    return crescResult.sort(crescs);
   },
 };
 
@@ -72,33 +103,48 @@ const htmlRender = {
     //In react we have a keyProps. Here....
 
     for (let index = 1; index <= range; index++) {
-      const format = formatedNumber.inputValue(index);
+      const format = utilsFormat.inputValue(index);
       $betTypeRange.innerHTML += `
       <input type="text" name="" id="${index}" value="${format}" class="grid-bet-container-range-input" onclick="getValue()" readonly />
     `;
     }
   },
-};
 
-//Utils
-const formatedNumber = {
-  inputValue(number) {
-    return number < 10 ? `0${number}` : number;
+  addCartItem() {
+    // //Take Array numbers.
+    // gametype
+    // game value
+    // deletar o array dos number
+
+    //TryCatch -> ErrorHandle - !add[]
+    const { type, price, color } = gameSelected[0];
+    const numbersInSelected = [...selectedNumbers];
+    const divCartItem = `
+      <div class="grid-cart-item">
+        <img src="./assets/delete.svg" alt="Delete cart Item" onclick="console.log('${type}')"/>
+        
+        <div class="grid-cart-item-description"  style="border-left: 0.25rem solid ${color} ">
+          <p>${utilsFormat.crescentArrayNumbers(numbersInSelected)}</p>
+          <span
+            ><strong style="color:${color} ">${type}</strong>
+            <span data-js="game-type-price">${utilsFormat.currencyValue(
+              price
+            )}</span>
+          </span>
+        </div>
+      </div>
+    `;
+
+    return divCartItem;
   },
 
-  //Format Value in Cart.
-  //if need * 100 for save and next /100 for back it is great!
-  currencyValue(value) {
-    value = String(value).replace(/\D/g, "");
-
-    value = Number(value);
-
-    value = value.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-
-    return value;
+  innerCartItem() {
+    const $gridCartContainer = document.querySelector(
+      ".grid-cart-container-section"
+    );
+    $gridCartContainer.innerHTML += htmlRender.addCartItem();
+    //$girdCartContainer.dataset.index = index; -> index come to ArrayCart
+    //TakeDelete expecific Element
   },
 };
 
@@ -152,9 +198,7 @@ const handleEvents = {
   },
 
   randomSelectedNumbers(gameRange) {
-    return String(
-      formatedNumber.inputValue(Math.ceil(Math.random() * gameRange))
-    );
+    return String(utilsFormat.inputValue(Math.ceil(Math.random() * gameRange)));
   },
 };
 
@@ -172,15 +216,6 @@ const handleButtonEvents = {
           selectedNumbers.push(randomNum);
         }
       }
-
-      const crescs = (cr1, cr2) => {
-        return cr1 - cr2;
-      };
-      //CompletedGame Repeat a number!
-
-      const crescResult = [...selectedNumbers];
-
-      console.log(crescResult.sort(crescs));
     } catch (error) {
       alert("Selecione um game primeiramente!");
     }
@@ -194,6 +229,18 @@ const handleButtonEvents = {
     gameNumbersRange.forEach((number) => {
       number.style.background = "var(--cyan-gray-300)"; //
     });
+  },
+};
+
+const handleCartEvents = {
+  addToCart() {
+    htmlRender.innerCartItem();
+  },
+
+  removeToCart(index) {
+    //Array cartItens
+    //cartItens splice(index,1)
+    //reload  App?
   },
 };
 

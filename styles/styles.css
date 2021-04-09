@@ -365,14 +365,19 @@ main div header p span {
   color: #7f3992;
 }
 
+.grid-cart-item-description {
+  border-radius: 3px 0 0 3px;
+
+  padding: 0.5rem;
+}
+
 .grid-cart-item-description p {
   width: 15rem;
   word-wrap: break-word;
-
   margin-bottom: 0.5rem;
 }
 
-.grid-cart-item-description::after {
+/* .grid-cart-item-description::after {
   content: "";
 
   width: 0.25rem;
@@ -385,7 +390,7 @@ main div header p span {
   border-radius: 7px 0 0 7px;
 
   background-color: #7f3992;
-}
+} */
 
 .grid-cart-total {
   margin-top: 2.5rem;

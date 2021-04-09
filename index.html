@@ -54,7 +54,10 @@
           </section>
 
           <section class="grid-bet-container-range">
-            <!-- <input
+            <!-- 
+              Need selected inputs
+              
+              <input
               type="text"
               class="selected"
               name=""
@@ -82,7 +85,10 @@
               </button>
             </div>
             <div>
-              <button class="grid-bet-container-function-buttons-add-cart">
+              <button
+                class="grid-bet-container-function-buttons-add-cart"
+                onclick="handleCartEvents.addToCart()"
+              >
                 <img
                   class="image-add-to-cart"
                   src="./assets/shopping-cart.svg"
@@ -100,24 +106,20 @@
           </section>
 
           <div class="grid-cart-container">
-            <!-- Vai vim do JS
-              <section>
-              <div class="grid-cart-item">
-                <img src="./assets/delete.svg" alt="Delete cart Item" />
-                <div class="grid-cart-item-description">
-                  <p>01,02,03,04,05,06,15,45,678,12,1,46,45,1,2</p>
-                  <span><strong>Lotofacil</strong>
-                  <span data-js="game-type-price">R$ 2,50</span>
-                  </span>
-                </div>
-              </section>
-  
-            -->
-
-            <section>
+            <section class="grid-cart-container-section">
               <div class="grid-cart-item">
                 <span><strong>Carinho vazio...</strong> </span>
               </div>
+              <!-- <div class="grid-cart-item">
+                <img src="./assets/delete.svg" alt="Delete cart Item" onclick=""/>
+                <div class="grid-cart-item-description">
+                  <p>01,02,03,04,05,06,15,45,678,12,1,46,45,1,2</p>
+                  <span
+                    ><strong>Lotofacil</strong>
+                    <span data-js="game-type-price">R$ 2,50</span>
+                  </span>
+                </div>
+              </div> -->
             </section>
 
             <section class="grid-cart-total">

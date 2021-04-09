@@ -10,9 +10,9 @@
 
 # **Requisitos Funcionais**
 
-**RF01. Complete Game**: para completar aleatoriamente os números
+[x] **RF01. Complete Game**: para completar aleatoriamente os números
 
-**RF02. Clear game**: limpar todos os números selecionados
+[x] **RF02. Clear game**: limpar todos os números selecionados
 
 **RF03. Add to cart**: adicionar os números no carrinho
 
