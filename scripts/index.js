@@ -89,18 +89,16 @@ const handleModalError = {
   },
 };
 
-const isActive = {
-  gameLotery(color) {},
-};
-
 const htmlRenderGame = {
   gameButtonTypes() {
     const $betTypes = document.querySelector(".grid-bet-container-button");
     gameApiResult[0].map((game) => {
       $betTypes.innerHTML += `
       <button
-        onclick="handleLoteryGames.switchGameMode('${game.type}','${game.color}')"
+        onclick="handleLoteryGames.switchGameMode('${game.type}')"
         data-js="${game.type}"
+        class="gamelotery-active-${game.type}"
+        
         type="button"
         style="color:${game.color};border:2px solid ${game.color}" >
         ${game.type}
@@ -131,7 +129,7 @@ const htmlRenderGame = {
     for (let index = 1; index <= range; index++) {
       const format = utilsFormat.inputValue(index);
       $betTypeRange.innerHTML += `
-      <input type="text" name="" id="${index}" value="${format}" class="grid-bet-container-range-input" onclick="handleLoteryGames.getValue(${index})" readonly />
+      <input type="text" name="" id="range-input-${index}" value="${format}" class="grid-bet-container-range-input" onclick="handleLoteryGames.getValue(${index})" readonly />
     `;
     }
   },
@@ -172,6 +170,7 @@ const htmlRenderGameCart = {
     return divCartItem;
   },
 
+  //!important
   noItensInCart() {
     const noItens = `<div class="grid-cart-item"> SPWASDAS D</div>`;
     console.log(noItens);
@@ -188,11 +187,76 @@ const htmlRenderGameCart = {
   },
 };
 
+const handleActive = {
+  //Patetic!
+  game() {
+    //Logic is, clear active classe, set other if active.
+    //back the initial state.
+    //Set Choosen selected, in toggle!
+
+    const { color, type } = gameSelected[0];
+
+    const $gameLoteryQuina = document.querySelector(`.gamelotery-active-Quina`);
+    const $gameLoteryMega = document.querySelector(
+      `.gamelotery-active-Mega-Sena`
+    );
+    const $gameLoteryLotofacil = document.querySelector(
+      `.gamelotery-active-Lotofácil`
+    );
+
+    const mega = gameApiResult[0][1];
+    const quina = gameApiResult[0][2];
+    const loto = gameApiResult[0][0];
+
+    console.log(mega);
+    switch (type) {
+      case "Lotofácil":
+        $gameLoteryLotofacil.style.background = `${color}`;
+        $gameLoteryLotofacil.style.color = "var(--white)";
+
+        $gameLoteryMega.style.background = "transparent";
+        $gameLoteryMega.style.color = `${mega.color}`;
+        $gameLoteryMega.style.borderColor = `${mega.color}`;
+
+        $gameLoteryQuina.style.background = "transparent";
+        $gameLoteryQuina.style.color = `${quina.color}`;
+        $gameLoteryQuina.style.borderColor = `${quina.color}`;
+
+        break;
+      case "Mega-Sena":
+        $gameLoteryMega.style.background = `${color}`;
+        $gameLoteryMega.style.color = "var(--white)";
+
+        $gameLoteryLotofacil.style.background = "transparent";
+        $gameLoteryLotofacil.style.color = `${loto.color}`;
+        $gameLoteryLotofacil.style.borderColor = `${loto.color}`;
+
+        $gameLoteryQuina.style.background = "transparent";
+        $gameLoteryQuina.style.color = `${quina.color}`;
+        $gameLoteryQuina.style.borderColor = `${quina.color}`;
+        break;
+      case "Quina":
+        $gameLoteryQuina.style.background = `${color}`;
+        $gameLoteryQuina.style.color = "var(--white)";
+
+        $gameLoteryMega.style.background = "transparent";
+        $gameLoteryMega.style.color = `${mega.color}`;
+        $gameLoteryMega.style.borderColor = `${mega.color}`;
+
+        $gameLoteryLotofacil.style.background = "transparent";
+        $gameLoteryLotofacil.style.color = `${loto.color}`;
+        $gameLoteryLotofacil.style.borderColor = `${loto.color}`;
+        break;
+
+      default:
+        break;
+    }
+  },
+};
+
 /* w8 */
 const handleLoteryGames = {
-  switchGameMode(gameType, gameColor) {
-    console.log(gameType, gameColor);
-
+  switchGameMode(gameType) {
     switch (gameType) {
       case "Lotofácil":
         handleLoteryGames.setGame(gameType);
@@ -209,24 +273,40 @@ const handleLoteryGames = {
         htmlRenderGame.gameDescriptionType();
         htmlRenderGame.gameRangeInputType();
         break;
-
       default:
         handleModalError.errorMessage(
           "Game Invalido! Ou Error no processamento do game."
         );
         handleModalError.toggle();
     }
+
+    handleActive.game();
   },
 
   setGame(gameType) {
     selectedNumbers = [];
+
     const result = gameApiResult[0].filter((game) => game.type === gameType);
     gameSelected = [...result];
-    console.log(gameSelected[0]);
   },
 
   getValue(value) {
-    selectedNumbers.push(value);
+    const $inputValue = document.querySelector(`#range-input-${value}`);
+    const indexSelected = selectedNumbers.indexOf(value);
+    const numExists = indexSelected === -1;
+
+    //Dont pass  const maxNumber = gameSelected[0]["max-number"];
+
+    if (numExists) {
+      selectedNumbers.push(value);
+      $inputValue.style.background = "var(--green-500)";
+    } else {
+      const index = selectedNumbers.indexOf(value);
+      selectedNumbers.splice(index, 1);
+      $inputValue.style.background = "var(--cyan-gray-300)";
+    }
+
+    console.log(numExists);
     console.log(selectedNumbers);
   },
 
@@ -270,18 +350,29 @@ const handleCartEvents = {
   allCartItems: storage.get(),
 
   add(loteryGame) {
-    //Check Errors numbers > max-number in array seleceted.
     try {
-      loteryGame = {
-        type: gameSelected[0].type,
-        numbers: [...selectedNumbers].map((el) => Number(el)),
-        color: gameSelected[0].color,
-        price: gameSelected[0].price,
-      };
+      const maxNumber = gameSelected[0]["max-number"];
+      const numbersChoise = [...selectedNumbers].map((el) => Number(el));
 
-      handleCartEvents.allCartItems.push(loteryGame);
-      app.reload();
-      console.log(handleCartEvents.allCartItems);
+      if (numbersChoise.length === maxNumber) {
+        const { type, color, price } = gameSelected[0];
+
+        loteryGame = {
+          type,
+          numbers: numbersChoise,
+          color,
+          price,
+        };
+
+        handleCartEvents.allCartItems.push(loteryGame);
+        app.reload();
+        handleButtonEvents.resetGame();
+        console.log(handleCartEvents.allCartItems);
+      } else {
+        throw new Error(
+          `Selecione o minimo de ${maxNumber}, para adicionar o game ao carrinho`
+        );
+      }
     } catch (error) {
       handleModalError.errorMessage(error.message);
       handleModalError.toggle();
