@@ -3,26 +3,19 @@ let gameSelected = [];
 let gameRange = [];
 let selectedNumbers = [];
 
-let cart = [
-  {
-    type: "lotofacil", //gameSelected[0].type
-    numbers: [1, 2, 3, 4], //[...selectedNumbers]
-    color: "red", //gameSelected[0].color
-    price: 8, //gameSelected[0].price
+const storage = {
+  get() {
+    return (
+      JSON.parse(localStorage.getItem("@luby-test-ninja-thiagoluiz")) || []
+    ); //se nao existir a informacao ele vai trazer um array vazio
   },
-  {
-    type: "lotofacil", //gameSelected[0].type
-    numbers: [1, 2, 3, 4], //[...selectedNumbers]
-    color: "red", //gameSelected[0].color
-    price: 8, //gameSelected[0].price
+  set(transactions) {
+    localStorage.setItem(
+      "@luby-test-ninja-thiagoluiz",
+      JSON.stringify(transactions)
+    );
   },
-  {
-    type: "lotofacil", //gameSelected[0].type
-    numbers: [1, 2, 3, 4], //[...selectedNumbers]
-    color: "red", //gameSelected[0].color
-    price: 8, //gameSelected[0].price
-  },
-];
+};
 const api = {
   getApiGames() {
     const ajax = new XMLHttpRequest();
@@ -147,7 +140,8 @@ const htmlRenderGameCart = {
     const $divItem = document.createElement("div");
 
     $divItem.innerHTML = htmlRenderGameCart.gameCartItem(loteryGame, index);
-    $divItem.dataset.index = index;
+
+    $divItem.dataset.index = index; //Unique Caracter
 
     htmlRenderGameCart.cartContainer.appendChild($divItem);
   },
@@ -273,13 +267,12 @@ const handleButtonEvents = {
 };
 
 const handleCartEvents = {
-  allCartItems: [...cart], //test fase. LoteryGame can ad but, app dont Reload yet.
+  allCartItems: storage.get(),
 
   add(loteryGame) {
     //Check Errors numbers > max-number in array seleceted.
     try {
       loteryGame = {
-        id: (Math.random() * 99) / 100,
         type: gameSelected[0].type,
         numbers: [...selectedNumbers].map((el) => Number(el)),
         color: gameSelected[0].color,
@@ -287,7 +280,7 @@ const handleCartEvents = {
       };
 
       handleCartEvents.allCartItems.push(loteryGame);
-      app.reload;
+      app.reload();
       console.log(handleCartEvents.allCartItems);
     } catch (error) {
       handleModalError.errorMessage(error.message);
@@ -297,7 +290,8 @@ const handleCartEvents = {
 
   remove(index) {
     handleCartEvents.allCartItems.splice(index, 1);
-    app.reload;
+
+    app.reload();
   },
 
   total() {
@@ -314,18 +308,23 @@ const handleCartEvents = {
 const app = {
   init() {
     api.getApiGames();
+    app.cartItem();
+  },
 
+  cartItem() {
     handleCartEvents.allCartItems.map((game, index) => {
       htmlRenderGameCart.innerCartItem(game, index);
     });
 
     htmlRenderGameCart.innerCartTotal();
+    storage.set(handleCartEvents.allCartItems);
   },
 
   reload() {
     htmlRenderGameCart.clearCartItens();
-
-    app.init();
+    console.log(`reload`);
+    storage.set(handleCartEvents.allCartItems);
+    app.cartItem();
   },
 };
 
