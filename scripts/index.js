@@ -1,25 +1,19 @@
-let game = [];
+const gameApiResult = [];
 let gameSelected = [];
 let gameRange = [];
 let selectedNumbers = [];
 
-let cart = []; //Add all cartItens Here!
-
-const handleModalError = {
-  toggle() {
-    const $modal = document.querySelector(".modal-overlay");
-    $modal.classList.toggle("active");
+let cart = [
+  {
+    id: 1,
+    type: "lotofacil", //gameSelected[0].type
+    numbers: [1, 2, 3, 4], //[...selectedNumbers]
+    color: "red", //gameSelected[0].color
+    price: 8, //gameSelected[0].price
   },
-  errorMessage(message) {
-    const $modalContent = document.querySelector(".modal-content");
-    $modalContent.innerHTML = `
+];
 
-    <p>Ocorreu um Error !</p>
-    <h2>${message}</h2>
-    <button onclick="handleModalError.toggle()"> FECHAR! </button>
-    `;
-  },
-};
+const localStorageCartItens = {};
 
 const api = {
   getApiGames() {
@@ -31,8 +25,8 @@ const api = {
       try {
         if (ajax.readyState === 4 && ajax.status === 200) {
           //JSON parse, copy all sub propries in OBJ.
-          game.push(JSON.parse(ajax.responseText).types);
-          htmlRender.gameButtonTypes();
+          gameApiResult.push(JSON.parse(ajax.responseText).types);
+          htmlRenderGame.gameButtonTypes();
         }
       } catch (error) {
         handleModalError.errorMessage(
@@ -46,7 +40,6 @@ const api = {
   },
 };
 
-//Utils
 const utilsFormat = {
   inputValue(number) {
     return number < 10 ? `0${number}` : number;
@@ -79,16 +72,26 @@ const utilsFormat = {
   },
 };
 
-//Onlick do button.
-//Set Active
-// Call Description
-// Call Numbers
+const handleModalError = {
+  toggle() {
+    const $modal = document.querySelector(".modal-overlay");
+    $modal.classList.toggle("active");
+  },
+  errorMessage(message) {
+    const $modalContent = document.querySelector(".modal-content");
+    $modalContent.innerHTML = `
 
-//Render gameButtonTypes button
-const htmlRender = {
+    <p>Ocorreu um Error !</p>
+    <h2>${message}</h2>
+    <button onclick="handleModalError.toggle()"> FECHAR! </button>
+    `;
+  },
+};
+
+const htmlRenderGame = {
   gameButtonTypes() {
     const $betTypes = document.querySelector(".grid-bet-container-button");
-    game[0].map((game) => {
+    gameApiResult[0].map((game) => {
       $betTypes.innerHTML += `
       <button
         onclick="handleEvents.switchGameMode('${game.type}','${game.color}')"
@@ -118,9 +121,7 @@ const htmlRender = {
     const $betTypeRange = document.querySelector(".grid-bet-container-range");
 
     const { range } = gameSelected[0];
-    $betTypeRange.innerHTML = ""; //clean inputs-container
-    //Found 80 elements with non-unique id #
-    //In react we have a keyProps. Here....
+    $betTypeRange.innerHTML = "";
 
     for (let index = 1; index <= range; index++) {
       const format = utilsFormat.inputValue(index);
@@ -129,22 +130,27 @@ const htmlRender = {
     `;
     }
   },
+};
 
-  addCartItem() {
+const htmlRenderGameCart = {
+  cartContainer: document.querySelector(".grid-cart-container-section"),
+
+  gameCartItem(loteryGame, index) {
     // //Take Array numbers.
     // gametype
     // game value
     // deletar o array dos number
 
     //TryCatch -> ErrorHandle - !add[]
-    const { type, price, color } = gameSelected[0];
-    const numbersInSelected = [...selectedNumbers];
+
+    const { type, price, color, numbers } = loteryGame;
+
     const divCartItem = `
       <div class="grid-cart-item">
         <img src="./assets/delete.svg" alt="Delete cart Item" onclick="console.log('${type}')"/>
         
         <div class="grid-cart-item-description"  style="border-left: 0.25rem solid ${color} ">
-          <p>${utilsFormat.crescentArrayNumbers(numbersInSelected)}</p>
+          <p>${utilsFormat.crescentArrayNumbers(numbers)}</p>
           <span
             ><strong style="color:${color} ">${type}</strong>
             <span data-js="game-type-price">${utilsFormat.currencyValue(
@@ -158,13 +164,22 @@ const htmlRender = {
     return divCartItem;
   },
 
-  innerCartItem() {
-    const $gridCartContainer = document.querySelector(
-      ".grid-cart-container-section"
+  innerCartItem(loteryGame, index) {
+    htmlRenderGameCart.cartContainer.innerHTML += htmlRenderGameCart.gameCartItem(
+      loteryGame
     );
-    $gridCartContainer.innerHTML += htmlRender.addCartItem();
     //$girdCartContainer.dataset.index = index; -> index come to ArrayCart
     //TakeDelete expecific Element
+  },
+
+  innerCartTotal() {
+    document.querySelector(
+      '[data-js="cart-total"]'
+    ).innerHTML = utilsFormat.currencyValue(handleCartEvents.total());
+  },
+
+  clearCartItens() {
+    htmlRenderGameCart.cartContainer.innerHTML = "";
   },
 };
 
@@ -176,18 +191,18 @@ const handleEvents = {
     switch (gameType) {
       case "Lotofácil":
         handleEvents.setGame(gameType);
-        htmlRender.gameDescriptionType();
-        htmlRender.gameRangeInputType();
+        htmlRenderGame.gameDescriptionType();
+        htmlRenderGame.gameRangeInputType();
         break;
       case "Mega-Sena":
         handleEvents.setGame(gameType);
-        htmlRender.gameDescriptionType();
-        htmlRender.gameRangeInputType();
+        htmlRenderGame.gameDescriptionType();
+        htmlRenderGame.gameRangeInputType();
         break;
       case "Quina":
         handleEvents.setGame(gameType);
-        htmlRender.gameDescriptionType();
-        htmlRender.gameRangeInputType();
+        htmlRenderGame.gameDescriptionType();
+        htmlRenderGame.gameRangeInputType();
         break;
 
       default:
@@ -200,15 +215,15 @@ const handleEvents = {
 
   setGame(gameType) {
     selectedNumbers = [];
-    const test = game[0].filter((game) => game.type === gameType);
-    gameSelected = [...test];
-    console.log(gameSelected);
+    const result = gameApiResult[0].filter((game) => game.type === gameType);
+    gameSelected = [...result];
+    console.log(gameSelected[0]);
   },
 
   //Take value inputs, put in array.
   //When click, Clear Array.
   //Or save in cart.
-  //HtmlRender for create it in cart.
+  //htmlRenderGame for create it in cart.
   //When create make id for delete him.
 
   getValue() {
@@ -256,21 +271,58 @@ const handleButtonEvents = {
 };
 
 const handleCartEvents = {
-  addToCart() {
-    htmlRender.innerCartItem();
+  allCartItems: [...cart], //test fase. LoteryGame can ad but, app dont Reload yet.
+
+  addToCart(loteryGame) {
+    //Check Errors numbers > max-number in array seleceted.
+    try {
+      loteryGame = {
+        id: (Math.random() * 99) / 100,
+        type: gameSelected[0].type,
+        numbers: [...selectedNumbers].map((el) => Number(el)),
+        color: gameSelected[0].color,
+        price: gameSelected[0].price,
+      };
+
+      handleCartEvents.allCartItems.push(loteryGame);
+      //app.reload;
+      console.log(handleCartEvents.allCartItems);
+    } catch (error) {
+      handleModalError.errorMessage(error.message);
+      handleModalError.toggle();
+    }
   },
 
   removeToCart(index) {
-    //Array cartItens
-    //cartItens splice(index,1)
-    //reload  App?
+    handleCartEvents.allCartItems.splice(index, 1);
+    app.reload;
+  },
+
+  total() {
+    let total = 0;
+
+    handleCartEvents.allCartItems.map((loteryGame) => {
+      total += loteryGame.price;
+    });
+
+    return total;
   },
 };
 
 const app = {
   init() {
     api.getApiGames();
-    console.log(game);
+
+    cart.map((game) => {
+      htmlRenderGameCart.innerCartItem(game);
+    });
+
+    htmlRenderGameCart.innerCartTotal();
+  },
+
+  reload() {
+    htmlRenderGameCart.clearCartItens();
+    app.init();
   },
 };
 
