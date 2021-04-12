@@ -248,7 +248,7 @@ main div header p span {
   animation: ease-in-out animatedTransation 0.6s;
 }
 
-.grid-bet-container-range-input.selected {
+.grid-bet-container-range-input.active {
   background-color: var(--green-500);
 }
 

@@ -7,6 +7,7 @@
 [x] **RNF02.** Consumir o arquivo JSON para obter os jogos e suas regras (Em Anexo)
 
 [ ]**RNF03.** Se preferir, pode utilizar bootstrap
+[x] OnlyCss
 
 # **Requisitos Funcionais**
 
@@ -14,6 +15,9 @@
 
 [x] **RF02. Clear game**: limpar todos os números selecionados
 
-**RF03. Add to cart**: adicionar os números no carrinho
+[x] **RF03. Add to cart**: adicionar os números no carrinho
 
-**RF04. Delete**: apagar um item do carrinho
+[x] **RF04. Delete**: apagar um item do carrinho
+
+_-Add Button no Array-_
+_-Active Status quando selecionado-_

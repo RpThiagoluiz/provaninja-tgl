@@ -89,13 +89,17 @@ const handleModalError = {
   },
 };
 
+const isActive = {
+  gameLotery(color) {},
+};
+
 const htmlRenderGame = {
   gameButtonTypes() {
     const $betTypes = document.querySelector(".grid-bet-container-button");
     gameApiResult[0].map((game) => {
       $betTypes.innerHTML += `
       <button
-        onclick="handleEvents.switchGameMode('${game.type}','${game.color}')"
+        onclick="handleLoteryGames.switchGameMode('${game.type}','${game.color}')"
         data-js="${game.type}"
         type="button"
         style="color:${game.color};border:2px solid ${game.color}" >
@@ -127,7 +131,7 @@ const htmlRenderGame = {
     for (let index = 1; index <= range; index++) {
       const format = utilsFormat.inputValue(index);
       $betTypeRange.innerHTML += `
-      <input type="text" name="" id="${index}" value="${format}" class="grid-bet-container-range-input" onclick="getValue()" readonly />
+      <input type="text" name="" id="${index}" value="${format}" class="grid-bet-container-range-input" onclick="handleLoteryGames.getValue(${index})" readonly />
     `;
     }
   },
@@ -168,6 +172,11 @@ const htmlRenderGameCart = {
     return divCartItem;
   },
 
+  noItensInCart() {
+    const noItens = `<div class="grid-cart-item"> SPWASDAS D</div>`;
+    console.log(noItens);
+  },
+
   innerCartTotal() {
     document.querySelector(
       '[data-js="cart-total"]'
@@ -180,23 +189,23 @@ const htmlRenderGameCart = {
 };
 
 /* w8 */
-const handleEvents = {
+const handleLoteryGames = {
   switchGameMode(gameType, gameColor) {
     console.log(gameType, gameColor);
 
     switch (gameType) {
       case "Lotofácil":
-        handleEvents.setGame(gameType);
+        handleLoteryGames.setGame(gameType);
         htmlRenderGame.gameDescriptionType();
         htmlRenderGame.gameRangeInputType();
         break;
       case "Mega-Sena":
-        handleEvents.setGame(gameType);
+        handleLoteryGames.setGame(gameType);
         htmlRenderGame.gameDescriptionType();
         htmlRenderGame.gameRangeInputType();
         break;
       case "Quina":
-        handleEvents.setGame(gameType);
+        handleLoteryGames.setGame(gameType);
         htmlRenderGame.gameDescriptionType();
         htmlRenderGame.gameRangeInputType();
         break;
@@ -216,18 +225,9 @@ const handleEvents = {
     console.log(gameSelected[0]);
   },
 
-  //Take value inputs, put in array.
-  //When click, Clear Array.
-  //Or save in cart.
-  //htmlRenderGame for create it in cart.
-  //When create make id for delete him.
-
-  getValue() {
-    // const takeInput = document.querySelector(".grid-bet-container-range-input");
-
-    // takeInput.classList.toggle("selected");
-
-    return {};
+  getValue(value) {
+    selectedNumbers.push(value);
+    console.log(selectedNumbers);
   },
 
   randomSelectedNumbers(gameRange) {
@@ -244,7 +244,7 @@ const handleButtonEvents = {
       //while is true, when he false result -1.
       //Check if number exists in Array. ╰（‵□′）╯
       while (maxNumber > selectedNumbers.length) {
-        let randomNum = handleEvents.randomSelectedNumbers(range);
+        let randomNum = handleLoteryGames.randomSelectedNumbers(range);
         if (selectedNumbers.indexOf(randomNum) === -1) {
           selectedNumbers.push(randomNum);
         }
