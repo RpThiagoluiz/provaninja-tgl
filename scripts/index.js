@@ -5,16 +5,24 @@ let selectedNumbers = [];
 
 let cart = [
   {
-    id: 1,
+    type: "lotofacil", //gameSelected[0].type
+    numbers: [1, 2, 3, 4], //[...selectedNumbers]
+    color: "red", //gameSelected[0].color
+    price: 8, //gameSelected[0].price
+  },
+  {
+    type: "lotofacil", //gameSelected[0].type
+    numbers: [1, 2, 3, 4], //[...selectedNumbers]
+    color: "red", //gameSelected[0].color
+    price: 8, //gameSelected[0].price
+  },
+  {
     type: "lotofacil", //gameSelected[0].type
     numbers: [1, 2, 3, 4], //[...selectedNumbers]
     color: "red", //gameSelected[0].color
     price: 8, //gameSelected[0].price
   },
 ];
-
-const localStorageCartItens = {};
-
 const api = {
   getApiGames() {
     const ajax = new XMLHttpRequest();
@@ -135,19 +143,21 @@ const htmlRenderGame = {
 const htmlRenderGameCart = {
   cartContainer: document.querySelector(".grid-cart-container-section"),
 
+  innerCartItem(loteryGame, index) {
+    const $divItem = document.createElement("div");
+
+    $divItem.innerHTML = htmlRenderGameCart.gameCartItem(loteryGame, index);
+    $divItem.dataset.index = index;
+
+    htmlRenderGameCart.cartContainer.appendChild($divItem);
+  },
+
   gameCartItem(loteryGame, index) {
-    // //Take Array numbers.
-    // gametype
-    // game value
-    // deletar o array dos number
-
-    //TryCatch -> ErrorHandle - !add[]
-
     const { type, price, color, numbers } = loteryGame;
 
     const divCartItem = `
       <div class="grid-cart-item">
-        <img src="./assets/delete.svg" alt="Delete cart Item" onclick="console.log('${type}')"/>
+        <img src="./assets/delete.svg" alt="Delete cart Item" onclick="handleCartEvents.remove(${index})"/>
         
         <div class="grid-cart-item-description"  style="border-left: 0.25rem solid ${color} ">
           <p>${utilsFormat.crescentArrayNumbers(numbers)}</p>
@@ -162,14 +172,6 @@ const htmlRenderGameCart = {
     `;
 
     return divCartItem;
-  },
-
-  innerCartItem(loteryGame, index) {
-    htmlRenderGameCart.cartContainer.innerHTML += htmlRenderGameCart.gameCartItem(
-      loteryGame
-    );
-    //$girdCartContainer.dataset.index = index; -> index come to ArrayCart
-    //TakeDelete expecific Element
   },
 
   innerCartTotal() {
@@ -273,7 +275,7 @@ const handleButtonEvents = {
 const handleCartEvents = {
   allCartItems: [...cart], //test fase. LoteryGame can ad but, app dont Reload yet.
 
-  addToCart(loteryGame) {
+  add(loteryGame) {
     //Check Errors numbers > max-number in array seleceted.
     try {
       loteryGame = {
@@ -285,7 +287,7 @@ const handleCartEvents = {
       };
 
       handleCartEvents.allCartItems.push(loteryGame);
-      //app.reload;
+      app.reload;
       console.log(handleCartEvents.allCartItems);
     } catch (error) {
       handleModalError.errorMessage(error.message);
@@ -293,7 +295,7 @@ const handleCartEvents = {
     }
   },
 
-  removeToCart(index) {
+  remove(index) {
     handleCartEvents.allCartItems.splice(index, 1);
     app.reload;
   },
@@ -313,8 +315,8 @@ const app = {
   init() {
     api.getApiGames();
 
-    cart.map((game) => {
-      htmlRenderGameCart.innerCartItem(game);
+    handleCartEvents.allCartItems.map((game, index) => {
+      htmlRenderGameCart.innerCartItem(game, index);
     });
 
     htmlRenderGameCart.innerCartTotal();
@@ -322,6 +324,7 @@ const app = {
 
   reload() {
     htmlRenderGameCart.clearCartItens();
+
     app.init();
   },
 };
