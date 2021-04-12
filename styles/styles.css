@@ -445,40 +445,55 @@ footer {
 
 /*===== MODAL ERROR =====*/
 .modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
 
   position: fixed;
   top: 0;
-  bottom: 0;
-  right: 0;
   left: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background-color: rgba(0, 0, 0, 0.7);
+
+  z-index: 9;
+
+  opacity: 0;
+  visibility: hidden;
 }
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
 .modal-content {
-  width: 100%;
-  max-width: 36rem;
-
+  background: #f0f2f5;
+  padding: 4rem;
   position: relative;
+  z-index: 1;
 
-  padding: 3rem;
-  border-radius: 0.25rem;
-  background: var(--background);
+  border-radius: 15px;
+
+  letter-spacing: 2px;
+  line-height: 4rem;
 }
 
-.modal-close {
-  position: absolute;
-  right: 1.5rem;
-  top: 1.5rem;
-  border: 0;
+.modal-content button {
+  width: 100%;
+  height: 2.25rem;
 
-  background: transparent;
+  color: var(--white);
+  background-color: var(--purple);
 
-  transition: brightness 0.2s;
+  border-radius: 12px;
+  border: none;
+
+  transition: filter 0.5s ease-in-out;
 }
 
-.modal-close:hover {
+.modal-content button:hover {
   filter: brightness(0.8);
 }

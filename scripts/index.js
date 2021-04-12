@@ -5,6 +5,22 @@ let selectedNumbers = [];
 
 let cart = []; //Add all cartItens Here!
 
+const handleModalError = {
+  toggle() {
+    const $modal = document.querySelector(".modal-overlay");
+    $modal.classList.toggle("active");
+  },
+  errorMessage(message) {
+    const $modalContent = document.querySelector(".modal-content");
+    $modalContent.innerHTML = `
+
+    <p>Ocorreu um Error !</p>
+    <h2>${message}</h2>
+    <button onclick="handleModalError.toggle()"> FECHAR! </button>
+    `;
+  },
+};
+
 const api = {
   getApiGames() {
     const ajax = new XMLHttpRequest();
@@ -19,7 +35,10 @@ const api = {
           htmlRender.gameButtonTypes();
         }
       } catch (error) {
-        console.log(error);
+        handleModalError.errorMessage(
+          "Error durante a Chamada da API! - Tente Novamente mais tarde!"
+        );
+        handleModalError.toggle();
       }
     };
 
@@ -172,8 +191,10 @@ const handleEvents = {
         break;
 
       default:
-        alert("GameInvalido!");
-        break;
+        handleModalError.errorMessage(
+          "Game Invalido! Ou Error no processamento do game."
+        );
+        handleModalError.toggle();
     }
   },
 
@@ -218,7 +239,8 @@ const handleButtonEvents = {
         }
       }
     } catch (error) {
-      alert("Selecione um game primeiramente!");
+      handleModalError.errorMessage("Selecione um game primeiramente!");
+      handleModalError.toggle();
     }
   },
 
