@@ -495,3 +495,9 @@ footer {
 .modal-content button:hover {
   filter: brightness(0.8);
 }
+
+@media (min-width: 1800px) {
+  .grid-cart {
+    right: 6rem;
+  }
+}

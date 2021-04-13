@@ -18,6 +18,3 @@
 [x] **RF03. Add to cart**: adicionar os números no carrinho
 
 [x] **RF04. Delete**: apagar um item do carrinho
-
-_-Add Button no Array-_
-_-Active Status quando selecionado-_

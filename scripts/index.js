@@ -7,7 +7,7 @@ const storage = {
   get() {
     return (
       JSON.parse(localStorage.getItem("@luby-test-ninja-thiagoluiz")) || []
-    ); //se nao existir a informacao ele vai trazer um array vazio
+    );
   },
   set(transactions) {
     localStorage.setItem(
@@ -170,11 +170,11 @@ const htmlRenderGameCart = {
     return divCartItem;
   },
 
-  //!important
-  noItensInCart() {
-    const noItens = `<div class="grid-cart-item"> SPWASDAS D</div>`;
-    console.log(noItens);
-  },
+  // //!important
+  // noItensInCart() {
+  //   const noItens = `<div class="grid-cart-item"> SPWASDAS D</div>`;
+  //   console.log(noItens);
+  // },
 
   innerCartTotal() {
     document.querySelector(
@@ -188,12 +188,7 @@ const htmlRenderGameCart = {
 };
 
 const handleActive = {
-  //Patetic!
   game() {
-    //Logic is, clear active classe, set other if active.
-    //back the initial state.
-    //Set Choosen selected, in toggle!
-
     const { color, type } = gameSelected[0];
 
     const $gameLoteryQuina = document.querySelector(`.gamelotery-active-Quina`);
@@ -208,7 +203,6 @@ const handleActive = {
     const quina = gameApiResult[0][2];
     const loto = gameApiResult[0][0];
 
-    console.log(mega);
     switch (type) {
       case "Lotofácil":
         $gameLoteryLotofacil.style.background = `${color}`;
@@ -252,9 +246,19 @@ const handleActive = {
         break;
     }
   },
+
+  number(value) {
+    const $inputValue = document.querySelector(`#range-input-${value}`);
+    const exists = selectedNumbers.indexOf(value);
+
+    if (exists !== -1) {
+      $inputValue.style.background = "var(--green-500)";
+    } else {
+      $inputValue.style.background = "var(--cyan-gray-300)";
+    }
+  },
 };
 
-/* w8 */
 const handleLoteryGames = {
   switchGameMode(gameType) {
     switch (gameType) {
@@ -291,23 +295,17 @@ const handleLoteryGames = {
   },
 
   getValue(value) {
-    const $inputValue = document.querySelector(`#range-input-${value}`);
     const indexSelected = selectedNumbers.indexOf(value);
     const numExists = indexSelected === -1;
 
-    //Dont pass  const maxNumber = gameSelected[0]["max-number"];
-
     if (numExists) {
       selectedNumbers.push(value);
-      $inputValue.style.background = "var(--green-500)";
+      handleActive.number(value);
     } else {
       const index = selectedNumbers.indexOf(value);
       selectedNumbers.splice(index, 1);
-      $inputValue.style.background = "var(--cyan-gray-300)";
+      handleActive.number(value);
     }
-
-    console.log(numExists);
-    console.log(selectedNumbers);
   },
 
   randomSelectedNumbers(gameRange) {
@@ -321,12 +319,11 @@ const handleButtonEvents = {
       const { range } = gameSelected[0];
       const maxNumber = gameSelected[0]["max-number"];
 
-      //while is true, when he false result -1.
-      //Check if number exists in Array. ╰（‵□′）╯
       while (maxNumber > selectedNumbers.length) {
         let randomNum = handleLoteryGames.randomSelectedNumbers(range);
         if (selectedNumbers.indexOf(randomNum) === -1) {
           selectedNumbers.push(randomNum);
+          selectedNumbers.map((el) => handleActive.number(el));
         }
       }
     } catch (error) {
@@ -367,10 +364,9 @@ const handleCartEvents = {
         handleCartEvents.allCartItems.push(loteryGame);
         app.reload();
         handleButtonEvents.resetGame();
-        console.log(handleCartEvents.allCartItems);
       } else {
         throw new Error(
-          `Selecione o minimo de ${maxNumber}, para adicionar o game ao carrinho`
+          `Selecione  ${maxNumber} numeros, para adicionar o game ao carrinho`
         );
       }
     } catch (error) {
@@ -413,7 +409,6 @@ const app = {
 
   reload() {
     htmlRenderGameCart.clearCartItens();
-    console.log(`reload`);
     storage.set(handleCartEvents.allCartItems);
     app.cartItem();
   },
