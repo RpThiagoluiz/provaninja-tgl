@@ -170,12 +170,6 @@ const htmlRenderGameCart = {
     return divCartItem;
   },
 
-  // //!important
-  // noItensInCart() {
-  //   const noItens = `<div class="grid-cart-item"> SPWASDAS D</div>`;
-  //   console.log(noItens);
-  // },
-
   innerCartTotal() {
     document.querySelector(
       '[data-js="cart-total"]'
@@ -188,9 +182,24 @@ const htmlRenderGameCart = {
 };
 
 const handleActive = {
+  //gameType - arg
   game() {
-    const { color, type } = gameSelected[0];
+    // const { color, type } = gameSelected[0];
+    // const $gameLoterySelected = document.querySelector(
+    //   `.gamelotery-active-${gameType}`
+    // );
+    // gameApiResult[0].map((el) => {
+    //   if (el === gameSelected[0]) {
+    //     $gameLoterySelected.style.background = `${color}`;
+    //     $gameLoterySelected.style.color = "var(--white)";
+    //   } else if (el !== gameSelected[0]) {
+    //     $gameLoterySelected.style.background = "transparent";
+    //     $gameLoterySelected.style.color = `${color}`;
+    //     $gameLoterySelected.style.borderColor = `${color}`;
+    //   }
+    // });
 
+    const { color, type } = gameSelected[0];
     const $gameLoteryQuina = document.querySelector(`.gamelotery-active-Quina`);
     const $gameLoteryMega = document.querySelector(
       `.gamelotery-active-Mega-Sena`
@@ -202,6 +211,8 @@ const handleActive = {
     const mega = gameApiResult[0][1];
     const quina = gameApiResult[0][2];
     const loto = gameApiResult[0][0];
+
+    console.log(type);
 
     switch (type) {
       case "Lotofácil":
@@ -283,7 +294,6 @@ const handleLoteryGames = {
         );
         handleModalError.toggle();
     }
-
     handleActive.game();
   },
 
@@ -314,16 +324,19 @@ const handleLoteryGames = {
 };
 
 const handleButtonEvents = {
+  //Bug - I need every time when i click generate a new
   completeGame() {
     try {
       const { range } = gameSelected[0];
+
       const maxNumber = gameSelected[0]["max-number"];
 
       while (maxNumber > selectedNumbers.length) {
         let randomNum = handleLoteryGames.randomSelectedNumbers(range);
         if (selectedNumbers.indexOf(randomNum) === -1) {
           selectedNumbers.push(randomNum);
-          selectedNumbers.map((el) => handleActive.number(el));
+          // selectedNumbers.map((el) => handleActive.number(el));
+          //But in Lotery game.
         }
       }
     } catch (error) {
