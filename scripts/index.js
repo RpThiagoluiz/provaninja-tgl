@@ -241,6 +241,7 @@ const handleLoteryGames = {
   },
 
   getValue(value) {
+    value = String(value);
     const indexSelected = selectedNumbers.indexOf(value);
     const numExists = indexSelected === -1;
     const maxNumbersSelected =
