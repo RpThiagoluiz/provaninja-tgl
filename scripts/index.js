@@ -174,6 +174,13 @@ const htmlRenderGameCart = {
     return divCartItem;
   },
 
+  cartEmpty() {
+    const $divItem = document.createElement("div");
+    $divItem.innerHTML = `<div class="grid-cart-item"><p>Carinho vazio...</p> </div>`;
+
+    return htmlRenderGameCart.cartContainer.appendChild($divItem);
+  },
+
   innerCartTotal() {
     document.querySelector(
       '[data-js="cart-total"]'
@@ -316,7 +323,7 @@ const handleCartEvents = {
         handleButtonEvents.resetGame();
       } else {
         throw new Error(
-          `Selecione  ${maxNumber} numeros, para adicionar o game ao carrinho`
+          `O game escolhido foi ${gameSelected[0].type},selecione  ${maxNumber} numeros, para adicionar o game ao carrinho`
         );
       }
     } catch (error) {
@@ -355,6 +362,10 @@ const app = {
 
     htmlRenderGameCart.innerCartTotal();
     storage.set(handleCartEvents.allCartItems);
+
+    handleCartEvents.allCartItems.length === 0
+      ? htmlRenderGameCart.cartEmpty()
+      : "";
   },
 
   reload() {
