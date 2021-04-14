@@ -250,11 +250,11 @@ const handleLoteryGames = {
       if (numExists && maxNumbersSelected) {
         selectedNumbers.push(value);
         handleActiveStyle.number(value);
-        console.log(selectedNumbers);
+        console.log(value);
+        console.log(value);
       } else if (!numExists) {
         selectedNumbers.splice(indexSelected, 1);
         handleActiveStyle.number(value);
-        console.log(selectedNumbers);
       } else {
         throw new Error(
           `Quantidade selecionada, excede a quantidade maxima ${gameSelected[0]["max-number"]}`
@@ -267,7 +267,7 @@ const handleLoteryGames = {
   },
 
   randomSelectedNumbers(gameRange) {
-    return String(utilsFormat.inputValue(Math.ceil(Math.random() * gameRange)));
+    return String(Math.floor(Math.random() * gameRange + 1));
   },
 };
 
@@ -278,15 +278,15 @@ const handleButtonEvents = {
 
     const maxNumber = gameSelected[0]["max-number"];
 
-    console.log(range);
-
     while (maxNumber > selectedNumbers.length) {
       let randomNum = handleLoteryGames.randomSelectedNumbers(range);
       if (selectedNumbers.indexOf(randomNum) === -1) {
         selectedNumbers.push(randomNum);
+        console.log(randomNum);
       }
+
+      selectedNumbers.map((el) => handleActiveStyle.number(el));
     }
-    selectedNumbers.map((el) => handleActiveStyle.number(el));
   },
 
   resetGame() {
