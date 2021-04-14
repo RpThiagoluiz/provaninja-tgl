@@ -33,7 +33,7 @@
       "range": 80,
       "price": 2,
       "max-number": 5,
-      "color": "#F79C31",
+      "color": "blue",
       "min-cart-value": 30
     }
   ]

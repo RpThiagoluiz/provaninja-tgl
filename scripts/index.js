@@ -25,7 +25,6 @@ const api = {
     const successCall = () => {
       try {
         if (ajax.readyState === 4 && ajax.status === 200) {
-          //JSON parse, copy all sub propries in OBJ.
           gameApiResult.push(JSON.parse(ajax.responseText).types);
           htmlRenderGame.gameButtonTypes();
         }
@@ -45,9 +44,6 @@ const utilsFormat = {
   inputValue(number) {
     return number < 10 ? `0${number}` : number;
   },
-
-  //Format Value in Cart.
-  //if need * 100 for save and next /100 for back it is great!
   currencyValue(value) {
     value = value * 100;
     value = String(value).replace(/\D/g, "");
@@ -182,83 +178,27 @@ const htmlRenderGameCart = {
 };
 
 const handleActive = {
-  //gameType - arg
-  game() {
-    //Can i use ?
-    //const filter = (...args) => args.filter(el => el === type)
-
-    // const { color, type } = gameSelected[0];
-    // const $gameLoterySelected = document.querySelector(
-    //   `.gamelotery-active-${gameType}`
-    // );
-    // gameApiResult[0].map((el) => {
-    //   if (el === gameSelected[0]) {
-    //     $gameLoterySelected.style.background = `${color}`;
-    //     $gameLoterySelected.style.color = "var(--white)";
-    //   } else if (el !== gameSelected[0]) {
-    //     $gameLoterySelected.style.background = "transparent";
-    //     $gameLoterySelected.style.color = `${color}`;
-    //     $gameLoterySelected.style.borderColor = `${color}`;
-    //   }
-    // });
-
+  game(gameType) {
     const { color, type } = gameSelected[0];
-    const $gameLoteryQuina = document.querySelector(`.gamelotery-active-Quina`);
-    const $gameLoteryMega = document.querySelector(
-      `.gamelotery-active-Mega-Sena`
-    );
-    const $gameLoteryLotofacil = document.querySelector(
-      `.gamelotery-active-Lotofácil`
+
+    const $gameSelected = document.querySelector(
+      `.gamelotery-active-${gameType}`
     );
 
-    const mega = gameApiResult[0][1];
-    const quina = gameApiResult[0][2];
-    const loto = gameApiResult[0][0];
+    gameApiResult[0].map((el) => {
+      const $AllGamesTypes = document.querySelector(
+        `.gamelotery-active-${el.type}`
+      );
 
-    console.log(type);
-
-    switch (type) {
-      case "Lotofácil":
-        $gameLoteryLotofacil.style.background = `${color}`;
-        $gameLoteryLotofacil.style.color = "var(--white)";
-
-        $gameLoteryMega.style.background = "transparent";
-        $gameLoteryMega.style.color = `${mega.color}`;
-        $gameLoteryMega.style.borderColor = `${mega.color}`;
-
-        $gameLoteryQuina.style.background = "transparent";
-        $gameLoteryQuina.style.color = `${quina.color}`;
-        $gameLoteryQuina.style.borderColor = `${quina.color}`;
-
-        break;
-      case "Mega-Sena":
-        $gameLoteryMega.style.background = `${color}`;
-        $gameLoteryMega.style.color = "var(--white)";
-
-        $gameLoteryLotofacil.style.background = "transparent";
-        $gameLoteryLotofacil.style.color = `${loto.color}`;
-        $gameLoteryLotofacil.style.borderColor = `${loto.color}`;
-
-        $gameLoteryQuina.style.background = "transparent";
-        $gameLoteryQuina.style.color = `${quina.color}`;
-        $gameLoteryQuina.style.borderColor = `${quina.color}`;
-        break;
-      case "Quina":
-        $gameLoteryQuina.style.background = `${color}`;
-        $gameLoteryQuina.style.color = "var(--white)";
-
-        $gameLoteryMega.style.background = "transparent";
-        $gameLoteryMega.style.color = `${mega.color}`;
-        $gameLoteryMega.style.borderColor = `${mega.color}`;
-
-        $gameLoteryLotofacil.style.background = "transparent";
-        $gameLoteryLotofacil.style.color = `${loto.color}`;
-        $gameLoteryLotofacil.style.borderColor = `${loto.color}`;
-        break;
-
-      default:
-        break;
-    }
+      if (el.type === type) {
+        $gameSelected.style.background = `${color}`;
+        $gameSelected.style.color = "var(--white)";
+      } else {
+        $AllGamesTypes.style.background = "transparent";
+        $AllGamesTypes.style.borderColor = `${el.color}`;
+        $AllGamesTypes.style.color = `${el.color}`;
+      }
+    });
   },
 
   number(value) {
@@ -282,7 +222,7 @@ const handleLoteryGames = {
     gameSelected = [...result];
     htmlRenderGame.gameDescriptionType();
     htmlRenderGame.gameRangeInputType();
-    handleActive.game();
+    handleActive.game(gameType);
   },
 
   getValue(value) {
@@ -305,7 +245,6 @@ const handleLoteryGames = {
 };
 
 const handleButtonEvents = {
-  //Bug - I need every time when i click generate a new
   completeGame() {
     try {
       const { range } = gameSelected[0];
@@ -316,8 +255,7 @@ const handleButtonEvents = {
         let randomNum = handleLoteryGames.randomSelectedNumbers(range);
         if (selectedNumbers.indexOf(randomNum) === -1) {
           selectedNumbers.push(randomNum);
-          selectedNumbers.map((el) => handleActive.number(el));
-          //But in Lotery game.
+          //selectedNumbers.map((el) => handleActive.number(el));
         }
       }
     } catch (error) {
