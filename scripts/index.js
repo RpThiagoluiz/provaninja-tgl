@@ -27,6 +27,15 @@ const api = {
         if (ajax.readyState === 4 && ajax.status === 200) {
           gameApiResult.push(JSON.parse(ajax.responseText).types);
           htmlRenderGame.gameButtonTypes();
+
+          const findLotofacil = gameApiResult[0].filter(
+            (game) => game.type === "Lotofácil"
+          );
+          gameSelected = [...findLotofacil];
+
+          htmlRenderGame.gameDescriptionType();
+          htmlRenderGame.gameRangeInputType();
+          handleActiveStyle.game("Lotofácil");
         }
       } catch (error) {
         handleModalError.errorMessage(
@@ -94,7 +103,6 @@ const htmlRenderGame = {
         onclick="handleLoteryGames.setGame('${game.type}')"
         data-js="${game.type}"
         class="gamelotery-active-${game.type}"
-        
         type="button"
         style="color:${game.color};border:2px solid ${game.color}" >
         ${game.type}
@@ -231,9 +239,6 @@ const handleLoteryGames = {
     const maxNumbersSelected =
       selectedNumbers.length < gameSelected[0]["max-number"];
 
-    //Verificar quando clicado se a quantidade maxima ja foi exedida caso nao,
-    //adicione no array
-
     try {
       if (numExists && maxNumbersSelected) {
         selectedNumbers.push(value);
@@ -254,35 +259,27 @@ const handleLoteryGames = {
     }
   },
 
-  // else {
-  //   const index = selectedNumbers.indexOf(value);
-  //   selectedNumbers.splice(index, 1);
-  //   handleActiveStyle.number(value);
-  // }
-
   randomSelectedNumbers(gameRange) {
     return String(utilsFormat.inputValue(Math.ceil(Math.random() * gameRange)));
   },
 };
 
 const handleButtonEvents = {
+  //!important
   completeGame() {
-    try {
-      const { range } = gameSelected[0];
+    const { range } = gameSelected[0];
 
-      const maxNumber = gameSelected[0]["max-number"];
+    const maxNumber = gameSelected[0]["max-number"];
 
-      while (maxNumber > selectedNumbers.length) {
-        let randomNum = handleLoteryGames.randomSelectedNumbers(range);
-        if (selectedNumbers.indexOf(randomNum) === -1) {
-          selectedNumbers.push(randomNum);
-          //selectedNumbers.map((el) => handleActiveStyle.number(el));
-        }
+    console.log(range);
+
+    while (maxNumber > selectedNumbers.length) {
+      let randomNum = handleLoteryGames.randomSelectedNumbers(range);
+      if (selectedNumbers.indexOf(randomNum) === -1) {
+        selectedNumbers.push(randomNum);
       }
-    } catch (error) {
-      handleModalError.errorMessage("Selecione um game primeiramente!");
-      handleModalError.toggle();
     }
+    selectedNumbers.map((el) => handleActiveStyle.number(el));
   },
 
   resetGame() {
