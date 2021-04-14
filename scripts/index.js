@@ -177,7 +177,7 @@ const htmlRenderGameCart = {
   },
 };
 
-const handleActive = {
+const handleActiveStyle = {
   game(gameType) {
     const { color, type } = gameSelected[0];
 
@@ -222,22 +222,43 @@ const handleLoteryGames = {
     gameSelected = [...result];
     htmlRenderGame.gameDescriptionType();
     htmlRenderGame.gameRangeInputType();
-    handleActive.game(gameType);
+    handleActiveStyle.game(gameType);
   },
 
   getValue(value) {
     const indexSelected = selectedNumbers.indexOf(value);
     const numExists = indexSelected === -1;
+    const maxNumbersSelected =
+      selectedNumbers.length < gameSelected[0]["max-number"];
 
-    if (numExists) {
-      selectedNumbers.push(value);
-      handleActive.number(value);
-    } else {
-      const index = selectedNumbers.indexOf(value);
-      selectedNumbers.splice(index, 1);
-      handleActive.number(value);
+    //Verificar quando clicado se a quantidade maxima ja foi exedida caso nao,
+    //adicione no array
+
+    try {
+      if (numExists && maxNumbersSelected) {
+        selectedNumbers.push(value);
+        handleActiveStyle.number(value);
+        console.log(selectedNumbers);
+      } else if (!numExists) {
+        selectedNumbers.splice(indexSelected, 1);
+        handleActiveStyle.number(value);
+        console.log(selectedNumbers);
+      } else {
+        throw new Error(
+          `Quantidade selecionada, excede a quantidade maxima ${gameSelected[0]["max-number"]}`
+        );
+      }
+    } catch (error) {
+      handleModalError.errorMessage(error.message);
+      handleModalError.toggle();
     }
   },
+
+  // else {
+  //   const index = selectedNumbers.indexOf(value);
+  //   selectedNumbers.splice(index, 1);
+  //   handleActiveStyle.number(value);
+  // }
 
   randomSelectedNumbers(gameRange) {
     return String(utilsFormat.inputValue(Math.ceil(Math.random() * gameRange)));
@@ -255,7 +276,7 @@ const handleButtonEvents = {
         let randomNum = handleLoteryGames.randomSelectedNumbers(range);
         if (selectedNumbers.indexOf(randomNum) === -1) {
           selectedNumbers.push(randomNum);
-          //selectedNumbers.map((el) => handleActive.number(el));
+          //selectedNumbers.map((el) => handleActiveStyle.number(el));
         }
       }
     } catch (error) {
