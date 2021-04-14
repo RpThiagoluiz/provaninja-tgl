@@ -95,7 +95,7 @@ const htmlRenderGame = {
     gameApiResult[0].map((game) => {
       $betTypes.innerHTML += `
       <button
-        onclick="handleLoteryGames.switchGameMode('${game.type}')"
+        onclick="handleLoteryGames.setGame('${game.type}')"
         data-js="${game.type}"
         class="gamelotery-active-${game.type}"
         
@@ -184,6 +184,9 @@ const htmlRenderGameCart = {
 const handleActive = {
   //gameType - arg
   game() {
+    //Can i use ?
+    //const filter = (...args) => args.filter(el => el === type)
+
     // const { color, type } = gameSelected[0];
     // const $gameLoterySelected = document.querySelector(
     //   `.gamelotery-active-${gameType}`
@@ -271,37 +274,15 @@ const handleActive = {
 };
 
 const handleLoteryGames = {
-  switchGameMode(gameType) {
-    switch (gameType) {
-      case "Lotofácil":
-        handleLoteryGames.setGame(gameType);
-        htmlRenderGame.gameDescriptionType();
-        htmlRenderGame.gameRangeInputType();
-        break;
-      case "Mega-Sena":
-        handleLoteryGames.setGame(gameType);
-        htmlRenderGame.gameDescriptionType();
-        htmlRenderGame.gameRangeInputType();
-        break;
-      case "Quina":
-        handleLoteryGames.setGame(gameType);
-        htmlRenderGame.gameDescriptionType();
-        htmlRenderGame.gameRangeInputType();
-        break;
-      default:
-        handleModalError.errorMessage(
-          "Game Invalido! Ou Error no processamento do game."
-        );
-        handleModalError.toggle();
-    }
-    handleActive.game();
-  },
-
   setGame(gameType) {
+    gameSelected = [];
     selectedNumbers = [];
 
     const result = gameApiResult[0].filter((game) => game.type === gameType);
     gameSelected = [...result];
+    htmlRenderGame.gameDescriptionType();
+    htmlRenderGame.gameRangeInputType();
+    handleActive.game();
   },
 
   getValue(value) {
@@ -335,7 +316,7 @@ const handleButtonEvents = {
         let randomNum = handleLoteryGames.randomSelectedNumbers(range);
         if (selectedNumbers.indexOf(randomNum) === -1) {
           selectedNumbers.push(randomNum);
-          // selectedNumbers.map((el) => handleActive.number(el));
+          selectedNumbers.map((el) => handleActive.number(el));
           //But in Lotery game.
         }
       }

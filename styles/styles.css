@@ -35,8 +35,10 @@ body {
   background: var(--white-700);
   font-family: "Helvetica Neue", sans-serif;
 }
-button {
+button,
+input {
   cursor: pointer;
+  outline: none;
 }
 
 /*===== ScrollBar =====*/
