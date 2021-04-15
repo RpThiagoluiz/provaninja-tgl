@@ -251,8 +251,6 @@ const handleLoteryGames = {
       if (numExists && maxNumbersSelected) {
         selectedNumbers.push(value);
         handleActiveStyle.number(value);
-        console.log(value);
-        console.log(value);
       } else if (!numExists) {
         selectedNumbers.splice(indexSelected, 1);
         handleActiveStyle.number(value);
